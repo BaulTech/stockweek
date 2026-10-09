@@ -8,6 +8,9 @@
 <meta property="og:title" content="StockWeek – This week's wholesale lot: safety shoes">
 <meta property="og:description" content="Sizes 34–44. RM20 / RM18 / RM16 per pair by quantity. Minimum 25 pairs. Order on WhatsApp.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://baultech.github.io/stockweek/">
+<meta property="og:image" content="https://baultech.github.io/stockweek/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f6f3ec;--ink:#1d2225;--mute:#5d666b;--card:#fff;--line:#ddd6c7;--kraft:#c79d6d;--hz:#f2b705;--hzink:#1d2225;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -80,20 +83,14 @@ input{width:100%;font:inherit;padding:12px;border:1px solid var(--line);border-r
   <ul class="specs"><li>Sizes 34–44</li><li>Wholesale only</li><li>Minimum 25 pairs</li><li>From RM16 per pair</li></ul>
  </div>
  <div class="card">
-  <div id="oform"><h3>Choose your sizes and pairs</h3>
+  <h3>Choose your sizes and pairs</h3>
   <p class="note">Enter how many pairs you want in each size.</p>
   <div class="sizes" id="sizes"></div>
   <table><thead><tr><th>Pairs</th><th>Price per pair</th></tr></thead><tbody id="tiers"></tbody></table>
   <div class="total"><span class="price" id="unit">RM20</span> per pair<br>Pairs: <span id="cnt">0</span> · Total: <span id="tot">–</span></div>
   <p class="note" style="margin-top:10px" id="warn"></p>
-  <label for="on">Your name</label><input id="on" autocomplete="name">
-  <label for="op">Phone / WhatsApp number</label><input id="op" type="tel" autocomplete="tel" inputmode="tel" placeholder="e.g. 012-345 6789">
-  <input class="hp" id="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-  <label class="chk"><input type="checkbox" id="oc"><span>I agree to receive my order confirmation and updates on WhatsApp.</span></label>
-  <p class="stat" id="ostat" role="alert"></p>
-  <button class="btn hz" id="order" type="button" style="width:100%;margin-top:8px">Submit order request</button>
-  </div>
-  <div id="osucc" class="ok" hidden><div class="big">Order request received successfully ✅</div><p style="margin:0 auto 10px">Thank you, <b id="oname"></b>. We will contact you within 12 hours to confirm your order and delivery details.</p><p class="note">Reference: <b id="oref"></b></p><button class="btn ghost" type="button" onclick="location.reload()">Place another order</button></div>
+  <label for="on">Your name (optional)</label><input id="on" autocomplete="name">
+  <a class="btn hz dis" id="order" href="#" style="width:100%;margin-top:16px">Order on WhatsApp</a>
  </div>
 </div>
 </div></section>
@@ -109,16 +106,10 @@ input{width:100%;font:inherit;padding:12px;border:1px solid var(--line);border-r
   <li><b>We agree terms before listing</b><br>You know exactly how and when you get paid.</li>
  </ol></div>
  <div class="card">
-  <div id="sform"><label for="sn">Your name</label><input id="sn" autocomplete="name">
-  <label for="sph">Phone / WhatsApp number</label><input id="sph" type="tel" autocomplete="tel" inputmode="tel" placeholder="e.g. 012-345 6789">
+  <label for="sn">Your name</label><input id="sn" autocomplete="name">
   <label for="sp">What stock do you have?</label><input id="sp" placeholder="e.g. 500 pairs of sports shoes">
   <label for="sq">Quantity and where it is</label><input id="sq" placeholder="e.g. 500 pairs, Klang">
-  <input class="hp" id="hp2" tabindex="-1" autocomplete="off" aria-hidden="true">
-  <label class="chk"><input type="checkbox" id="sc"><span>I agree to receive updates about my request on WhatsApp.</span></label>
-  <p class="stat" id="sstat" role="alert"></p>
-  <button class="btn hz" id="sendstock" type="button" style="margin-top:8px;width:100%">Submit stock request</button>
-  </div>
-  <div id="ssucc" class="ok" hidden><div class="big">Stock request received successfully ✅</div><p style="margin:0 auto 10px">Thank you, <b id="sname"></b>. We will contact you within 12 hours to discuss your stock and the next steps.</p><p class="note" style="color:#b9c0c3">Reference: <b id="sref"></b></p></div>
+  <a class="btn hz dis" id="sendstock" href="#" style="margin-top:18px;width:100%">Send on WhatsApp</a>
  </div>
 </div>
 </div></section></div>
@@ -147,7 +138,6 @@ var SLIDES=[{t:"i",s:"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAg
 // ===== EDIT EACH WEEK =====
 var CONFIG={
   whatsapp:"601140011863",
-  endpoint:"",   // paste your Cloudflare Worker URL here (see setup guide)
   facebook:"",   // paste your Facebook page link here once it exists
   product:"Black leather safety shoe",
   sizes:[34,35,36,37,38,39,40,41,42,43,44],
@@ -186,46 +176,20 @@ function calc(){
  var ok=n>=CONFIG.minPairs,t=tier(n);
  var rows=CONFIG.tiers.map(function(x,i){var nx=CONFIG.tiers[i+1];
   return'<tr class="'+(ok&&x===t?"on":"")+'"><td>'+x.min+(nx?"–"+(nx.min-1):"+")+' pairs</td><td>RM'+x.price+'</td></tr>'}).join("");
- rows+='<tr><td>Bigger volume</td><td>Tap the WhatsApp button</td></tr>';
+ rows+='<tr><td>Bigger volume</td><td><a href="'+wa("Hi, I want a price for a bigger volume of "+CONFIG.product+".")+'" style="color:inherit">Ask for a quote</a></td></tr>';
  q("tiers").innerHTML=rows;
  q("unit").textContent="RM"+t.price;q("cnt").textContent=n;q("tot").textContent=ok?"RM"+(n*t.price).toLocaleString("en-MY"):"–";
  q("warn").textContent=ok?"":(n?"Add "+(CONFIG.minPairs-n)+" more pairs to reach the "+CONFIG.minPairs+"-pair minimum.":"Minimum order is "+CONFIG.minPairs+" pairs.");
- var o=q("order");o.className=ok?"btn hz":"btn hz dis";o.disabled=!ok;
+ var o=q("order"),nm=q("on").value.trim();o.className=ok?"btn hz":"btn hz dis";
+ o.href=ok?wa("Hi StockWeek, I'd like to place an order:\n\n"+CONFIG.product+"\n"+parts.join("\n")+"\n\nTotal: "+n+" pairs x RM"+t.price+" = RM"+(n*t.price)+(nm?"\nName: "+nm:"")+"\n\nPlease confirm availability and delivery."):"#";
 }
 calc();
-function norm(p){var d=String(p).replace(/\D/g,"");if(d.indexOf("0")==0)d="60"+d.slice(1);else if(/^1\d{8,9}$/.test(d))d="60"+d;return d}
-function validPhone(p){var d=norm(p);return d.length>=10&&d.length<=15}
-function mkref(){return"SW-"+Date.now().toString(36).toUpperCase().slice(-5)+Math.random().toString(36).toUpperCase().slice(2,4)}
-function send(payload,stat,btn,done){
- stat.textContent="";
- if(new URLSearchParams(location.search).get("preview")==="1"){done();return}
- if(!CONFIG.endpoint){stat.textContent="Online ordering opens soon. Please tap the WhatsApp button to reach us now.";return}
- btn.disabled=true;var old=btn.textContent;btn.textContent="Sending…";
- var ctrl=new AbortController(),to=setTimeout(function(){ctrl.abort()},20000);
- fetch(CONFIG.endpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload),signal:ctrl.signal})
- .then(function(r){return r.json().catch(function(){return{}}).then(function(j){if(!r.ok||!j.ok)throw 0;done()})})
- .catch(function(){stat.textContent="Sorry, we couldn't send that. Please try again, or tap the WhatsApp button."})
- .then(function(){clearTimeout(to);btn.disabled=false;btn.textContent=old;calc()})
-}
-q("order").onclick=function(){
- var n=0,sizes={};CONFIG.sizes.forEach(function(s){if(counts[s]){n+=counts[s];sizes[s]=counts[s]}});
- var st=q("ostat"),name=q("on").value.trim(),ph=q("op").value.trim();
- if(n<CONFIG.minPairs){st.textContent="Minimum order is "+CONFIG.minPairs+" pairs.";return}
- if(name.length<2){st.textContent="Please enter your name.";q("on").focus();return}
- if(!validPhone(ph)){st.textContent="Please enter a valid phone or WhatsApp number, e.g. 012-345 6789.";q("op").focus();return}
- if(!q("oc").checked){st.textContent="Please tick the box so we can send your confirmation on WhatsApp.";return}
- var t=tier(n),r=mkref();
- send({type:"order",ref:r,name:name,phone:norm(ph),product:CONFIG.product,sizes:sizes,pairs:n,unit:t.price,total:n*t.price,consent:true,hp:q("hp").value},st,q("order"),function(){q("oform").hidden=true;q("osucc").hidden=false;q("oname").textContent=name;q("oref").textContent=r});
-};
-q("sendstock").onclick=function(){
- var st=q("sstat"),name=q("sn").value.trim(),ph=q("sph").value.trim(),s=q("sp").value.trim(),qt=q("sq").value.trim();
- if(name.length<2){st.textContent="Please enter your name.";q("sn").focus();return}
- if(!validPhone(ph)){st.textContent="Please enter a valid phone or WhatsApp number, e.g. 012-345 6789.";q("sph").focus();return}
- if(s.length<3||qt.length<2){st.textContent="Please tell us what stock you have, the quantity and where it is.";return}
- if(!q("sc").checked){st.textContent="Please tick the box so we can reply on WhatsApp.";return}
- var r=mkref();
- send({type:"stock",ref:r,name:name,phone:norm(ph),stock:s,qty:qt,consent:true,hp:q("hp2").value},st,q("sendstock"),function(){q("sform").hidden=true;q("ssucc").hidden=false;q("sname").textContent=name;q("sref").textContent=r});
-};
+function sendStock(){
+ var s=q("sp").value.trim(),qt=q("sq").value.trim(),nm=q("sn").value.trim(),ok=s&&qt;
+ var b=q("sendstock");b.className=ok?"btn hz":"btn hz dis";
+ b.href=ok?wa("Hi StockWeek, I have stock to list:\n\n"+(nm?"Name: "+nm+"\n":"")+"Stock: "+s+"\nQuantity and location: "+qt+"\n\nPlease let me know the next steps."):"#"}
+["sn","sp","sq"].forEach(function(i){q(i).oninput=sendStock});sendStock();
+q("on").oninput=calc;
 q("fab").href=wa("Hi, I'm interested in this week's lot.");
 if(CONFIG.facebook){q("fb").href=CONFIG.facebook;q("follow").hidden=false}
 </script>
